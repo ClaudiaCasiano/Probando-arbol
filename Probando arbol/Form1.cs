@@ -28,7 +28,9 @@ namespace Probando_arbol
             arbolito.Inserta(arbolito.nuevo(12));
             arbolito.Inserta(arbolito.nuevo(15));
             arbolito.Inserta(arbolito.nuevo(70));
-            arbolito.Inserta(arbolito.nuevo(90));
+            arbolito.Eliminar(arbolito.nuevo(15));
+            arbolito.Eliminar(arbolito.nuevo(70));
+
             //arbolito.Inserta(arbolito.nuevo(8));
             //arbolito.Inserta(arbolito.nuevo(10));
             //arbolito.Inserta(arbolito.nuevo(13));
@@ -74,7 +76,7 @@ namespace Probando_arbol
             ////arbolito.insertar("Giovacnna", "holi", "usuario1", "empresa1", "depto1", "fechahoy", "hora", "nada");
             ////arbolito.insertar("jhony", "holi", "usuario1", "empresa1", "depto1", "fechahoy", "hora", "nada");
             arbolito.hijos.Enqueue("raicita");
-            arbolito.imprimir(arbolito.p);
+            arbolito.imprimir(arbolito.principal);
             //58,af,ddf,gg,weewe
 
 
