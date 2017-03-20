@@ -197,69 +197,17 @@ namespace Probando_arbol
             NRaiz = Mder;
         }
 
-        public void imprimir(Pagina raiz)
-        {
-            Console.WriteLine(hijos.Dequeue());
-            int a = 0;
-            Nodo impresion;
-
-            for (int i = 0; i < raiz.Cuentas; i++)
-            {
-                impresion = raiz.Claves[i];
-                if (impresion == null)
-                {
-                    i = 5;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine(num + ". " + raiz.Claves[i].Id);
-                    num++;
-                }
-
-            }
+        
 
 
 
-            if (raiz.Ramas[0] != null)
-            {
-                Pagina ram;
-                for (int i = 0; i < raiz.Cuentas+1; i++)
-                {
-                    ram = raiz.Ramas[i];
-                    if (ram == null)
-                    {
-                        break;
-                    }
-                    hijos.Enqueue("rama no." + i + "de la pagina que inicia con " + raiz.Claves[0].Id);
-                    lista.Enqueue(raiz.Ramas[i]);
-                }
-
-
-            }
-
-
-
-            try
-            {
-                imprimir(lista.Dequeue());
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Se imprimieron todos los nodos");
-
-            }
-        }
-
-
-
-
+        //=========================ELIMINACION  D:<   =================
 
         public void Eliminar(Nodo clave)
         {
             if (pagVacia(principal))
             {
-                Console.WriteLine("No hay elementos");
+                Console.WriteLine("El arbol esta vacio ");
             }
             else
             {
@@ -288,15 +236,13 @@ namespace Probando_arbol
                     Raiz = Raiz.Ramas[0];
                 }
                 principal = Raiz;
-                Console.WriteLine("Eliminacion completa");
+                Console.WriteLine("Se elimino" + clave.Id);
             }
         }
-        //Elimina el registro
 
         public void EliminarRegistro(Pagina raiz, Nodo c)
         {
             int pos = 0;
-            Nodo sucesor;
             if (pagVacia(raiz))
             {
                 Esta = false;
@@ -308,7 +254,7 @@ namespace Probando_arbol
                 {
                     if (pagVacia(raiz.Ramas[pos - 1]))
                     {
-                        Quitar(raiz, pos);
+                        ALV(raiz, pos);
                     }
                     else
                     {
@@ -326,7 +272,6 @@ namespace Probando_arbol
                 }
             }
         }
-        //Busca el sucesor
 
         public void Sucesor(Pagina raiz, int k)
         {
@@ -337,7 +282,6 @@ namespace Probando_arbol
             }
             raiz.Claves[k - 1] = q.Claves[0];
         }
-        //Combina para formar un nodo
 
         public void Combina(Pagina raiz, int pos)
         {
@@ -355,9 +299,8 @@ namespace Probando_arbol
                 MovIz.Ramas[MovIz.Cuentas] = MovDer.Ramas[j];
                 j++;
             }
-            Quitar(raiz, pos);
+            ALV(raiz, pos);
         }
-        //Mueve a la derecha
 
         public void MoverDer(Pagina raiz, int pos)
         {
@@ -375,7 +318,6 @@ namespace Probando_arbol
             raiz.Ramas[pos].Ramas[0] = raiz.Ramas[pos - 1].Ramas[raiz.Ramas[pos - 1].Cuentas];
             raiz.Ramas[pos - 1].Cuentas--;
         }
-        //Mover a la izquierda
 
         public void MoverIzq(Pagina raiz, int pos)
         {
@@ -394,9 +336,8 @@ namespace Probando_arbol
                 i++;
             }
         }
-        //Quita el elemento
 
-        public void Quitar(Pagina raiz, int pos)
+        public void ALV(Pagina raiz, int pos)// O sea quitar XD
         {
             int j = pos + 1;
             while (j != raiz.Cuentas + 1)
@@ -407,7 +348,6 @@ namespace Probando_arbol
             }
             raiz.Cuentas--;
         }
-        //Restablece el nodo
 
         public void Restablecer(Pagina raiz, int pos)
         {
@@ -429,6 +369,63 @@ namespace Probando_arbol
             else
             {
                 Combina(raiz, 1);
+            }
+        }
+
+
+
+        //========================varios===============================
+        public void imprimir(Pagina raiz)
+        {
+            Console.WriteLine(hijos.Dequeue());
+            int a = 0;
+            Nodo impresion;
+
+            for (int i = 0; i < raiz.Cuentas; i++)
+            {
+                impresion = raiz.Claves[i];
+                if (impresion == null)
+                {
+                    i = 5;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine(num + ". " + raiz.Claves[i].Id);
+                    num++;
+                }
+
+            }
+
+
+
+            if (raiz.Ramas[0] != null)
+            {
+                Pagina ram;
+                for (int i = 0; i < raiz.Cuentas + 1; i++)
+                {
+                    ram = raiz.Ramas[i];
+                    if (ram == null)
+                    {
+                        break;
+                    }
+                    hijos.Enqueue("rama no. " + i + " de la pagina que inicia con " + raiz.Claves[0].Id);
+                    lista.Enqueue(raiz.Ramas[i]);
+                }
+
+
+            }
+
+
+
+            try
+            {
+                imprimir(lista.Dequeue());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Se imprimieron todos los nodos");
+
             }
         }
 
