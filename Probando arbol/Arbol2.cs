@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +12,9 @@ namespace Probando_arbol
     {
         Queue<Pagina> lista = new Queue<Pagina>();
         public Queue<String> hijos = new Queue<String>();
-        public int num = 1;
-        int com = 1;
+        public int num = 1, struc = 1, auu = 2;
+        int com;
+        public String archivo = "digraph structs {";
 
 
         public Pagina principal = new Pagina();
@@ -28,7 +31,7 @@ namespace Probando_arbol
         {
             com = 0;
             int j = 0;
-            if (clave.Id.CompareTo(raiz.Claves[0].Id)<0/*clave.nump() < raiz.Claves[0].nump()*/)//es porque no hay que correrlo, es un |2| y la raiz es por ejemplo  |8|25|33
+            if (clave.Id.CompareTo(raiz.Claves[0].Id) < 0)//es porque no hay que correrlo, es un |2| y la raiz es por ejemplo  |8|25|33
             {
                 Esta = false;
                 j = 0;
@@ -36,7 +39,7 @@ namespace Probando_arbol
             else
             {
                 j = raiz.Cuentas;//el numero actual de nodos llenos
-                while (clave.Id.CompareTo(raiz.Claves[j - 1].Id) <0  && j > 1)//mientras el nuevo nodo sea menor que el de la clave de la raiz -2 y j sea mayor a 1
+                while (clave.Id.CompareTo(raiz.Claves[j - 1].Id) < 0 && j > 1)//mientras el nuevo nodo sea menor que el de la clave de la raiz -2 y j sea mayor a 1
                 {
                     --j;
                 }
@@ -107,6 +110,8 @@ namespace Probando_arbol
             Console.WriteLine();
             hijos.Enqueue("Raiz");
             imprimir(principal);
+            Relaciones(principal);
+            Console.WriteLine(archivo);
         }
 
 
@@ -116,9 +121,9 @@ namespace Probando_arbol
 
 
         //crea un nuevo nodo con los objetos que mande
-        public Nodo nuevo(string id/*, string activo, string usuario, string empresa, string depto, string fecha, string hora*/)
+        public Nodo nuevo(string activo, string usuario, string empresa, string depto, string fecha, string hora)
         {
-            Nodo nuev = new Nodo(id);
+            Nodo nuev = new Nodo(caractrRan(), activo, usuario, empresa, depto, fecha, hora);
             //nuev.nump() = id;
             return nuev;
         }
@@ -197,7 +202,7 @@ namespace Probando_arbol
             NRaiz = Mder;
         }
 
-        
+
 
 
 
@@ -377,8 +382,17 @@ namespace Probando_arbol
         //========================varios===============================
         public void imprimir(Pagina raiz)
         {
+
+            if (raiz.Cuentas > 0)
+            {
+                archivo = archivo + "\n struct" + struc + "[label = ";
+            }
+            
+
+
+            struc++;
             Console.WriteLine(hijos.Dequeue());
-            int a = 0;
+            //int a = 0;
             Nodo impresion;
 
             for (int i = 0; i < raiz.Cuentas; i++)
@@ -391,9 +405,15 @@ namespace Probando_arbol
                 }
                 else
                 {
+                    archivo = archivo + " \"<f" + (i + 1) + "> " + raiz.Claves[i].Id;
+                    if (i < raiz.Cuentas - 1)
+                    {
+                        archivo = archivo + "|";
+                    }
                     Console.WriteLine(num + ". " + raiz.Claves[i].Id);
                     num++;
                 }
+                archivo = archivo + "\"];";
 
             }
 
@@ -411,6 +431,7 @@ namespace Probando_arbol
                     }
                     hijos.Enqueue("rama no. " + i + " de la pagina que inicia con " + raiz.Claves[0].Id);
                     lista.Enqueue(raiz.Ramas[i]);
+
                 }
 
 
@@ -430,6 +451,127 @@ namespace Probando_arbol
         }
 
 
+
+
+
+        public string caractrRan()
+        {
+            System.Threading.Thread.Sleep(01);
+            Random obj = new Random(DateTime.Now.Millisecond);
+            string posibles = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            int longitud = posibles.Length;
+            char letra;
+            int longitudnuevacadena = 15;
+
+            string nuevacadena = "";
+
+            for (int i = 0; i < longitudnuevacadena; i++)
+
+            {
+
+                letra = posibles[obj.Next(longitud)];
+                nuevacadena += letra.ToString();
+
+            }
+            Console.WriteLine("el random creado es " + nuevacadena);
+            return nuevacadena;
+        }
+
+
+        //============================este metodo ya no va a servir=========================
+        public void generar(string filename, string path)
+        {
+            var command = "dot -Tjpg c://aa//pru.txt -o "+path+"//imag.jpg";
+
+            var procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c" + command);
+            var proc = new System.Diagnostics.Process();
+
+            proc.StartInfo = procStartInfo;
+
+            proc.Start();
+            proc.WaitForExit();
+        }
+
+        //================================================================================
+
+        public void Relaciones(Pagina raiz)
+        {
+            struc = 1;
+            
+            if (raiz.Cuentas > 0)
+            {
+                archivo = archivo + "\n struct" + struc + "[label = ";
+            }
+
+
+            
+            Console.WriteLine(hijos.Dequeue());
+            Nodo impresion;
+
+            for (int i = 0; i < raiz.Cuentas; i++)
+            {
+                
+                impresion = raiz.Claves[i];
+                if (impresion == null)
+                {
+                    i = 5;
+                    break;
+                }
+                else
+                {
+                    archivo = archivo + "struct" + struc + ":f" + (i + 1) + " -> struct" + (auu) + ";";
+                    
+                }
+                archivo = archivo + "\"];";
+
+            }
+
+
+
+            if (raiz.Ramas[0] != null)
+            {
+                Pagina ram;
+                for (int i = 0; i < raiz.Cuentas + 1; i++)
+                {
+                    ram = raiz.Ramas[i];
+                    if (ram == null)
+                    {
+                        break;
+                    }
+                    hijos.Enqueue("rama no. " + i + " de la pagina que inicia con " + raiz.Claves[0].Id);
+                    lista.Enqueue(raiz.Ramas[i]);
+
+                }
+
+
+            }
+
+
+
+            try
+            {
+                imprimir(lista.Dequeue());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Se imprimieron todos los nodos");
+
+            }
+
+
+
+
+            //archivo = archivo + "\"<f0> left|<f1> mid\\ dle|<f2> right\"]; struct1:f1 -> struct2:f0; }";
+            String path = Directory.GetCurrentDirectory();
+            Console.WriteLine(path);
+            archivo = archivo + "}";
+          
+            //string[] lines = { "First line", "Second line", "Third line" }; it doesn't care
+            System.IO.File.WriteAllText(path + "\\Btree.txt", archivo);
+            generar(path, "Btree.txt");
+           
+
+        }
     }
 }
 
